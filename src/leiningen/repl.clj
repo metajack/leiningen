@@ -20,8 +20,7 @@
 
 (defn- start-server [project port ack-port]
   (if project
-    (eval/eval-in-project (assoc (project/merge-profile project profile)
-                            :eval-in :classloader)
+    (eval/eval-in-project (project/merge-profile project profile)
                           `(do (clojure.tools.nrepl.server/start-server
                                  :port ~port :ack-port ~ack-port))
                           '(do (require 'clojure.tools.nrepl.server)
