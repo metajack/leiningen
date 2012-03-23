@@ -20,7 +20,8 @@
 
 (defn- start-server [project port ack-port]
   (if project
-    (eval/eval-in-project (project/merge-profile project profile)
+    (eval/eval-in-project (assoc (project/merge-profile project profile)
+                            :eval-in :classloader)
                           `(do (clojure.tools.nrepl.server/start-server
                                  :port ~port :ack-port ~ack-port))
                           '(do (require 'clojure.tools.nrepl.server)
@@ -78,7 +79,7 @@ and port."
      ":headless" (let [server (start-server project
                                 (repl-port project)
                                 (ack-port project))]
-                   (println "nREPL server started on port" (-> @server :ss .getLocalPort)) 
+                   (println "nREPL server started on port" (-> @server :ss .getLocalPort))
                    (while true
                      (Thread/sleep Long/MAX_VALUE)))
      ":connect" (reply/launch-nrepl {:attach (first opts)})
